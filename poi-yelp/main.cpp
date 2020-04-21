@@ -7,6 +7,9 @@
 #include <qlibwindowmanager.h>
 
 #include <navigation.h>
+#if USE_POI_BINDING
+#include <poi.h>
+#endif
 
 #define DEFAULT_CREDENTIALS_FILE "/etc/poikey"
 
@@ -69,7 +72,11 @@ int main(int argc, char *argv[], char *env[])
 
     qwm->set_event_handler(QLibWindowmanager::Event_SyncDraw, SyncDrawHandler);
 
+#if !USE_POI_BINDING
     mainapp = new MainApp(new Navigation(bindingAddress));
+#else
+    mainapp = new MainApp(new Navigation(bindingAddress), new POI(bindingAddress, POI::ProcessType::client));
+#endif
 
     hs->init(port, token.c_str());
 

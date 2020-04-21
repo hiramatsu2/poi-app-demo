@@ -9,6 +9,7 @@
     <param name="navigation" value="ws" />
     <param name="windowmanager" value="ws" />
     <param name="homescreen" value="ws" />
+    <param name="poi" value="ws" />
   </feature>
   <feature name="urn:AGL:widget:required-permission">
     <param name="urn:AGL:permission::public:no-htdocs" value="required" />

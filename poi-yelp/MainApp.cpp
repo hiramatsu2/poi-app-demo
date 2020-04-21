@@ -122,6 +122,37 @@ MainApp::MainApp(Navigation *navigation):QMainWindow(Q_NULLPTR, Qt::FramelessWin
     this->show();
 }
 
+#if USE_POI_BINDING
+MainApp::MainApp(Navigation *navigation, POI *poi): MainApp(navigation)
+{
+    isConnectedToPoiBinding = false;
+    poiapi = poi;
+
+    connect(poiapi, &POI::connected, [&]() {
+        mutex.lock();
+        isConnectedToPoiBinding = true;
+        mutex.unlock();
+    });
+
+    connect(poiapi, &POI::responseReceivedEvent, [&](const QJsonValue &data) {
+        QJsonDocument doc(data.toObject());
+
+        mutex.lock();
+
+        /* memorize the text which gave this result: */
+        currentSearchedText = lineEdit.text();
+
+        currentIndex = 0;
+        Businesses.clear();
+        ParseJsonBusinessList(doc.toJson(QJsonDocument::Compact), Businesses);
+        DisplayResultList(true);
+        FillResultList(Businesses);
+
+        mutex.unlock();
+    });
+}
+#endif
+
 MainApp::~MainApp()
 {
     mutex.lock();
@@ -869,7 +900,9 @@ int MainApp::StartMonitoringUserInput()
 {
     connect(&searchBtn, SIGNAL(clicked(bool)), this, SLOT(searchBtnClicked()));
     connect(&lineEdit, SIGNAL(textChanged(const QString &)), this, SLOT(textChanged(const QString &)));
+#if !USE_POI_BINDING
     connect(&networkManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(networkReplySearch(QNetworkReply*)));
+#endif
     connect(&keyboard, SIGNAL(keyClicked(const QString &)), this, SLOT(textAdded(const QString &)));
     connect(&keyboard, SIGNAL(specialKeyClicked(int)), this, SLOT(keyPressed(int)));
     return 1;
@@ -927,6 +960,7 @@ void MainApp::positionGot()
 
     TRACE_DEBUG("URL: %s", qPrintable(myUrlStr));
 
+#if !USE_POI_BINDING
     QUrl myUrl = QUrl(myUrlStr);
     QNetworkRequest req(myUrl);
     req.setRawHeader(QByteArray("Authorization"), (tr("bearer ") + token).toLocal8Bit());
@@ -934,6 +968,19 @@ void MainApp::positionGot()
     /* Then, send a HTTP request to get the token and wait for answer (synchronously): */
 
     pSearchReply = networkManager.get(req);
+#else
+    if (isConnectedToPoiBinding) {
+        QJsonObject reqToBinding;
+        reqToBinding.insert("href", myUrlStr);
+        QJsonArray hh;
+        QJsonArray auth;
+        auth.append("Authorization");
+        auth.append(tr("bearer ") + token);
+        hh.append(auth);
+        reqToBinding.insert("http-header", hh);
+        poiapi->sendRequest("external-online-request-http-get-json", reqToBinding);
+    }
+#endif
 
     mutex.unlock();
 }

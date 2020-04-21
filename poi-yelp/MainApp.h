@@ -13,6 +13,10 @@
 #include "Keyboard.h"
 
 #include <navigation.h>
+#define USE_POI_BINDING 0
+#if USE_POI_BINDING
+#include <poi.h>
+#endif
 
 typedef void (*NavWinRaiseCb_t)(void);
 
@@ -22,6 +26,9 @@ class MainApp: public QMainWindow
 
     public:
         explicit MainApp(Navigation *navigation);
+#if USE_POI_BINDING
+        explicit MainApp(Navigation *navigation, POI *poi);
+#endif
         ~MainApp();
         int AuthenticatePOI(const QString & CredentialsFile);
         int StartMonitoringUserInput();
@@ -42,6 +49,9 @@ class MainApp: public QMainWindow
         void SetWayPoints(uint32_t myRoute);
 
         Navigation *naviapi;
+#if USE_POI_BINDING
+        POI *poiapi;
+#endif
         NavWinRaiseCb_t navWinRaiseCb = nullptr;
         QNetworkAccessManager networkManager;
         QPushButton searchBtn;
@@ -66,6 +76,9 @@ class MainApp: public QMainWindow
         bool isInputDisplayed;
         bool isKeyboard;
         bool isAglNavi;
+#if USE_POI_BINDING
+        bool isConnectedToPoiBinding;
+#endif
         std::vector<Business> Businesses;
         QFont font;
 
