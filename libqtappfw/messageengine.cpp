@@ -30,6 +30,7 @@
 #include "telephonymessage.h"
 #include "weathermessage.h"
 #include "voicemessage.h"
+#include "poimessage.h"
 
 #include <QJsonArray>
 
@@ -157,6 +158,9 @@ void MessageEngine::onTextMessageReceived(QString jsonStr)
 		} else if (api == "hvac") {
 			message = new HVACMessage;
 			type = HVACEventMessage;
+		} else if (api == "poi") {
+			message = new POIMessage;
+			type = POIEventMessage;
 		} else {
 			message = new Message;
 			type = GenericMessage;

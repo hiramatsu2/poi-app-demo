@@ -46,6 +46,7 @@ enum MessageType {
 	SignalComposerEventMessage,
 	GuiMetadataCapabilityEventMessage,
 	HVACEventMessage,
+	POIEventMessage,
 };
 
 class Message : public QObject

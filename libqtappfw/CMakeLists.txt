@@ -59,7 +59,8 @@ set (SUBDIRS
 	telephony
 	voice
 	voice-capabilities
-	weather)
+	weather
+	poi)
 
 add_headers(message.h messageengine.h responsemessage.h)
 add_sources(message.cpp messageengine.cpp responsemessage.cpp)
