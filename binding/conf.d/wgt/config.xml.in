@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" id="@PROJECT_NAME@" version="@PROJECT_VERSION@">
+	<name>poi-binding</name>
+	<icon src="icon.png"/>
+	<content src="config.xml" type="application/vnd.agl.service"/>
+	<description>Demonstration POI Binding</description>
+	<author>Hiramatsu Shoichi &lt;hiramatsu_sh@micware.co.jp&gt;</author>
+	<license>MIT</license>
+
+	<feature name="urn:AGL:widget:required-permission">
+		<param name="urn:AGL:permission::public:hidden" value="required" />
+		<param name="urn:AGL:permission::public:no-htdocs" value="required" />
+		<param name="urn:AGL:permission:afm:system:widget:start" value="required" />
+	</feature>
+
+	<feature name="urn:AGL:widget:provided-api">
+		<param name="@API_NAME@" value="ws" />
+	</feature>
+
+	<feature name="urn:AGL:widget:required-api">
+		<param name="afm-main" value="ws" />
+	</feature>
+
+	<feature name="urn:AGL:widget:required-binding">
+		<param name="@WIDGET_ENTRY_POINT@" value="local" />
+	</feature>
+
+</widget>
