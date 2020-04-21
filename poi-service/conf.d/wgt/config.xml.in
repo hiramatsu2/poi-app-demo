@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" id="@PROJECT_NAME@" version="0.1">
+	<name>poi-service-process</name>
+	<icon src="icon.png"/>
+	<content src="@WIDGET_ENTRY_POINT@" type="application/vnd.agl.native" />
+	<description>Demonstration POI Service process</description>
+	<author>Hiramatsu Shoichi &lt;hiramatsu_sh@micware.co.jp&gt;</author>
+	<license>MIT</license>
+
+	<feature name="urn:AGL:widget:required-permission">
+		<param name="urn:AGL:permission::public:no-htdocs" value="required" />
+		<param name="urn:AGL:permission::public:hidden" value="required" />
+	</feature>
+
+	<feature name="urn:AGL:widget:required-api">
+		<param name="poi" value="ws" />
+	</feature>
+</widget>
+
